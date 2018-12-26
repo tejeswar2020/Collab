@@ -174,11 +174,11 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>update-theme</goal>
-                            <goal>update-widgetset</goal>
-                            <goal>compile</goal>
-                            <!-- Comment out compile-theme goal to use on-the-fly theme compilation -->
-                            <goal>compile-theme</goal>
+				<!-- <goal>update-theme</goal> -->
+				<!-- <goal>update-widgetset</goal> -->
+				<!-- <goal>compile</goal> -->
+                                <!-- Comment out compile-theme goal to use on-the-fly theme compilation -->
+			        <!-- <goal>compile-theme</goal> -->
                         </goals>
                     </execution>
                 </executions>
@@ -333,7 +333,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
+	    <!-- <plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>dockerfile-maven-plugin</artifactId>
                 <version>${dockerfile-maven-plugin.version}</version>
@@ -342,9 +342,9 @@
                         <id>default</id>
                         <goals>
                             <goal>build</goal>
-                            <!--
+                            
                             <goal>push</goal>
-                            -->
+                            
                         </goals>
                     </execution>
                 </executions>
@@ -353,7 +353,7 @@
                     <tag>latest</tag>
                     <contextDirectory>${project.build.directory}</contextDirectory>
                 </configuration>
-            </plugin>
+	    </plugin> -->
         </plugins>
     </build>
 </project>

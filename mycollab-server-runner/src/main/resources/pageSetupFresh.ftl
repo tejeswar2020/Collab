@@ -2,7 +2,7 @@
 <html>
 <head>
 <#import "macroPage.ftl" as lib>
-<@lib.headElements title="MyCollab Setup Assistant Page"/>
+<@lib.headElements title="Veridic Portal Setup Assistant Page"/>
 <style media="screen" type="text/css">
 input {
     font-size:18px;
@@ -20,22 +20,18 @@ label {
     <div id="spacing""></div>
     <div id="mainBody">
         <div id="title">
-            <h1>Thank you for trial MyCollab<h1>
+            <h1>Thank you for working with Veridic Portal<h1>
         </div>
         <hr size="1" style="margin: 1px 0 20px 0; ">
         <div id="title">
-            <h3>Welcome to the MyCollab setup wizard. Please fill in the information below to complete the installation process.</h3>
-            <h4>MyCollab is well tested on various platforms include Windows, Linux and MacOS. We have been
-                spending countless hours to do the installation testing on
-                as many machines as possible. If you can not install MyCollab successfully, please raise your case in
-                 our <a href="http://support.mycollab.com/list/42580-general-help/" target="_blank">Support
-                 page</a></h4>
+            <h3>Welcome to the Veridic Portal Setup wizard.</h3>
+            <h4>write something if you need</h4>
         </div>
         <hr size="1" style="margin: 20px 0 1px 0; ">
         <div id="mainContent">
             <table style="width:100%">
                 <tr>
-                    <td style="vertical-align: top; width: 400px;"><div style="margin-top:10px;">MYCOLLAB SETUP</div></td>
+                    <td style="vertical-align: top; width: 400px;"><div style="margin-top:10px;">Veridic Portal SETUP</div></td>
                     <td style="display: inline-block; vertical-align: top; width:100%">
                         <form>
                             <table border="0" style="width:100%">
@@ -44,7 +40,7 @@ label {
                                         <td><label for="sitename">Site name:</label></td>
                                     </tr>
                                     <tr>
-                                        <td><input id="sitename" value="MyCollab"/></td>
+                                        <td><input id="sitename" value="veridic"/></td>
                                     </tr>
                                     <tr>
                                         <td ><label for="serverAddress">Server address (without port value and http/https protocol):</label></td>
@@ -52,7 +48,7 @@ label {
                                     <tr>
                                         <td><input id="serverAddress" placeholder="Example: 192.168.1.70 or myservername.com"/></td>
                                     </tr>
-                                    <tr><td><h4>You can get this info from your web host. It could be an IP address or server name. You must not include the server port in this value. If you want to change the server port, please use <a href="https://community.mycollab.com/faq/#defaultport">this way</a></h4></td></tr>
+                                    <tr><td><h4>You can get this info from your web host. It could be an IP address or server name. You must not include the server port in this value.</h4></td></tr>
                                 </tbody>
                             </table>
                         </form>
@@ -62,7 +58,7 @@ label {
             <table style="width:100%;margin-top: 20px;">
                 <tr>
                     <td style="vertical-align: top; width: 400px;"><div style="margin-top:10px;">DATABASE SETUP</div>
-                        <h4>Configure your pre-created MyCollab database schema</h4>
+                        <h4>Configure your pre-created database schema</h4>
                     </td>
                     <td style="display: inline-block; vertical-align: top; width:100%">
                         <form>
@@ -72,9 +68,9 @@ label {
                                         <td><label for="databaseName">Database name: </label></td>
                                     </tr>
                                     <tr>
-                                        <td><input id="databaseName" placeholder="Example: mycollab"/></td>
+                                        <td><input id="databaseName" placeholder="Example: veridic"/></td>
                                     </tr>
-                                    <tr><td><h4>Name of MyCollab database. Database must be created before.</h4></td></tr>
+                                    <tr><td><h4>Database must be created before.</h4></td></tr>
                                     <tr>
                                         <td><label for="dbUserName">User name:</label></td>
                                     </tr>
@@ -114,7 +110,7 @@ label {
             <table style="width:100%;margin-top: 20px;">
                 <tr>
                     <td style="vertical-align: top; width: 400px;"><div style="margin-top:10px;">EMAIL SETUP (Optional)<div>
-                        <h4>Configure your outgoing SMTP email address to use with the software. You can configure your SMTP account later in MyCollab configuration file $\{MYCOLLAB_HOME}/conf/application.properties</h4>
+                        <h4>Configure your outgoing SMTP email address to use with the software. You can configure your SMTP account later in configuration file /conf/application.properties</h4>
                     </td>
                     <td style="display: inline-block; vertical-align: top; width:100%">
                         <form>
@@ -124,7 +120,7 @@ label {
                                         <td ><label for="smtpUserName">User name:</label></td>
                                     </tr>
                                     <tr>
-                                        <td><input id="smtpUserName" placeholder="Example: mycollab@gmail.com"/></td>
+                                        <td><input id="smtpUserName" placeholder="Example: support@veridicsoltuions.com"/></td>
                                     </tr>
                                     <tr>
                                         <td><h4>Username or account of your email service.
@@ -335,7 +331,7 @@ function updateInfoAction(){
         return;
     }
     $('#setupBtn').html('<img src="${defaultUrls.cdn_url}icons/lazy-load-icon.gif" alt="Pulpit rock" style="height:18px;"><span style="font-size: 15px">&nbsp;&nbsp;Setting up...</span>');
-    $('#setupBtn').after('<p><h3 style=\"color:orange\">Please be patient! It may takes a few minutes to set up MyCollab depends on your servers performance. Whenever the install process is completed, the browser redirects automatically to the application home page</h3></p>');
+    $('#setupBtn').after('<p><h3 style=\"color:orange\">Please be patient! It may takes a few minutes to setUp depends on your servers performance. Whenever the install process is completed, the browser redirects automatically to the application home page</h3></p>');
     var urlPost = "/install";
 
     var tlsStatus = "";
