@@ -54,8 +54,8 @@ object InstallUtils {
             email.isSSLOnConnect = isSSL
 
             email.setFrom(username)
-            email.subject = "MyCollab Test Email"
-            email.setMsg("This is a test mail ... :-)")
+            email.subject = "Veridic Portal Test Email"
+            email.setMsg("This is a test mail after modifying the code!!!!!  ")
             email.addTo(username)
             email.send()
         } catch (e: Exception) {
