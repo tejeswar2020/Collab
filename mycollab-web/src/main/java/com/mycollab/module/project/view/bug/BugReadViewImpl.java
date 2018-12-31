@@ -44,11 +44,8 @@ import com.mycollab.vaadin.mvp.ViewComponent;
 import com.mycollab.vaadin.mvp.ViewManager;
 import com.mycollab.vaadin.ui.ELabel;
 import com.mycollab.vaadin.ui.VerticalRemoveInlineComponentMarker;
-import com.mycollab.vaadin.web.ui.AbstractPreviewItemComp;
-import com.mycollab.vaadin.web.ui.AdvancedPreviewBeanForm;
-import com.mycollab.vaadin.web.ui.ReadViewLayout;
-import com.mycollab.vaadin.web.ui.WebThemes;
-import com.vaadin.server.FontAwesome;
+import com.mycollab.vaadin.web.ui.*;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
@@ -56,7 +53,6 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vaadin.peter.buttongroup.ButtonGroup;
 import org.vaadin.viritin.button.MButton;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
@@ -125,12 +121,12 @@ public class BugReadViewImpl extends AbstractPreviewItemComp<SimpleBug> implemen
                         EventBusFactory.getInstance().post(new BugEvent.BugChanged(this, beanItem.getId()));
                     })
                     .withStyleName(WebThemes.BUTTON_ACTION);
-            navButton.addButton(openBtn);
 
             MButton resolveBtn = new MButton(UserUIContext.getMessage(BugI18nEnum.BUTTON_RESOLVED),
                     clickEvent -> UI.getCurrent().addWindow(new ResolvedInputWindow(beanItem)))
                     .withStyleName(WebThemes.BUTTON_ACTION);
-            navButton.addButton(resolveBtn);
+
+            navButton.addButtons(openBtn, resolveBtn);
             bugWorkflowControl.addComponent(navButton);
         } else if (Open.name().equals(beanItem.getStatus()) ||
                 ReOpen.name().equals(beanItem.getStatus())) {
@@ -145,12 +141,12 @@ public class BugReadViewImpl extends AbstractPreviewItemComp<SimpleBug> implemen
                         EventBusFactory.getInstance().post(new BugEvent.BugChanged(this, beanItem.getId()));
                     })
                     .withStyleName(WebThemes.BUTTON_ACTION);
-            navButton.addButton(inProgressBtn);
 
             MButton resolveBtn = new MButton(UserUIContext.getMessage(BugI18nEnum.BUTTON_RESOLVED),
                     clickEvent -> UI.getCurrent().addWindow(new ResolvedInputWindow(beanItem)))
                     .withStyleName(WebThemes.BUTTON_ACTION);
-            navButton.addButton(resolveBtn);
+
+            navButton.addButtons(inProgressBtn, resolveBtn);
             bugWorkflowControl.addComponent(navButton);
         } else if (Verified.name().equals(beanItem.getStatus())) {
             bugWorkflowControl.removeAllComponents();
@@ -166,21 +162,11 @@ public class BugReadViewImpl extends AbstractPreviewItemComp<SimpleBug> implemen
             MButton reopenBtn = new MButton(UserUIContext.getMessage(GenericI18Enum.BUTTON_REOPEN),
                     clickEvent -> UI.getCurrent().addWindow(new ReOpenWindow(beanItem)))
                     .withStyleName(WebThemes.BUTTON_ACTION);
-            navButton.addButton(reopenBtn);
 
             MButton approveNCloseBtn = new MButton(UserUIContext.getMessage(BugI18nEnum.BUTTON_APPROVE_CLOSE),
                     clickEvent -> UI.getCurrent().addWindow(new ApproveInputWindow(beanItem)))
                     .withStyleName(WebThemes.BUTTON_ACTION);
-            navButton.addButton(approveNCloseBtn);
-            bugWorkflowControl.addComponent(navButton);
-        } else if (Resolved.name().equals(beanItem.getStatus())) {
-            bugWorkflowControl.removeAllComponents();
-            ButtonGroup navButton = new ButtonGroup();
-            MButton reopenBtn = new MButton(UserUIContext.getMessage(GenericI18Enum.BUTTON_REOPEN),
-                    clickEvent -> UI.getCurrent().addWindow(new ReOpenWindow(beanItem)))
-                    .withStyleName(WebThemes.BUTTON_ACTION);
-            navButton.addButton(reopenBtn);
-
+            navButton.addButtons(reopenBtn, approveNCloseBtn);
             bugWorkflowControl.addComponent(navButton);
         }
         bugWorkflowControl.setVisible(CurrentProjectVariables.canWrite(ProjectRolePermissionCollections.BUGS));
@@ -258,10 +244,10 @@ public class BugReadViewImpl extends AbstractPreviewItemComp<SimpleBug> implemen
             BugRelationService bugRelationService = AppContextUtil.getSpringBean(BugRelationService.class);
             List<SimpleRelatedBug> relatedBugs = bugRelationService.findRelatedBugs(bug.getId());
             if (CollectionUtils.isNotEmpty(relatedBugs)) {
-                for (final SimpleRelatedBug relatedBug : relatedBugs) {
-                    if (relatedBug.getRelated()) {
+                for (SimpleRelatedBug relatedBug : relatedBugs) {
+                    if (relatedBug.getRelated() != null) {
                         ELabel relatedLink = new ELabel(UserUIContext.getMessage(BugRelation.class,
-                                relatedBug.getRelatedType())).withStyleName(WebThemes.ARROW_BTN).withWidthUndefined();
+                                relatedBug.getRelatedType())).withStyleName(WebThemes.ARROW_BTN).withUndefinedWidth();
                         ToggleBugSummaryWithDependentField toggleRelatedBugField = new ToggleBugSummaryWithDependentField(bug, relatedBug.getRelatedBug());
                         MHorizontalLayout bugContainer = new MHorizontalLayout(relatedLink, toggleRelatedBugField)
                                 .expand(toggleRelatedBugField).withFullWidth();
@@ -269,7 +255,7 @@ public class BugReadViewImpl extends AbstractPreviewItemComp<SimpleBug> implemen
                     } else {
                         Enum relatedEnum = BugRelation.valueOf(relatedBug.getRelatedType()).getReverse();
                         ELabel relatedLink = new ELabel(UserUIContext.getMessage(relatedEnum)).withStyleName(WebThemes.ARROW_BTN)
-                                .withWidthUndefined();
+                                .withUndefinedWidth();
                         ToggleBugSummaryWithDependentField toggleRelatedBugField = new ToggleBugSummaryWithDependentField(bug, relatedBug.getRelatedBug());
                         MHorizontalLayout bugContainer = new MHorizontalLayout(relatedLink, toggleRelatedBugField)
                                 .expand(toggleRelatedBugField).withFullWidth();
@@ -301,7 +287,7 @@ public class BugReadViewImpl extends AbstractPreviewItemComp<SimpleBug> implemen
         if (CurrentProjectVariables.canWrite(ProjectRolePermissionCollections.BUGS)) {
             MButton linkBtn = new MButton(UserUIContext.getMessage(BugI18nEnum.OPT_BUG_DEPENDENCIES),
                     clickEvent -> UI.getCurrent().addWindow(new LinkIssueWindow(beanItem)))
-                    .withIcon(FontAwesome.BOLT);
+                    .withIcon(VaadinIcons.BOLT);
             bugPreviewFormControls.addOptionButton(linkBtn);
         }
 
@@ -316,7 +302,7 @@ public class BugReadViewImpl extends AbstractPreviewItemComp<SimpleBug> implemen
 
         MButton assignBtn = new MButton(UserUIContext.getMessage(GenericI18Enum.BUTTON_ASSIGN),
                 clickEvent -> UI.getCurrent().addWindow(new AssignBugWindow(beanItem)))
-                .withIcon(FontAwesome.SHARE).withStyleName(WebThemes.BUTTON_ACTION);
+                .withIcon(VaadinIcons.SHARE).withStyleName(WebThemes.BUTTON_ACTION);
         assignBtn.setVisible(CurrentProjectVariables.canWrite(ProjectRolePermissionCollections.BUGS));
 
         bugWorkflowControl = new CssLayout();
@@ -354,7 +340,7 @@ public class BugReadViewImpl extends AbstractPreviewItemComp<SimpleBug> implemen
             this.removeAllComponents();
             this.withMargin(false);
 
-            Label peopleInfoHeader = ELabel.html(FontAwesome.USER.getHtml() + " " +
+            Label peopleInfoHeader = ELabel.html(VaadinIcons.USER.getHtml() + " " +
                     UserUIContext.getMessage(ProjectCommonI18nEnum.SUB_INFO_PEOPLE));
             peopleInfoHeader.setStyleName("info-hdr");
             this.addComponent(peopleInfoHeader);

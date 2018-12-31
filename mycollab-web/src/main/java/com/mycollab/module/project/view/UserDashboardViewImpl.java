@@ -1,16 +1,16 @@
 /**
  * Copyright © MyCollab
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -18,7 +18,6 @@ package com.mycollab.module.project.view;
 
 import com.hp.gagawa.java.elements.A;
 import com.mycollab.common.i18n.GenericI18Enum;
-import com.mycollab.configuration.SiteConfiguration;
 import com.mycollab.db.arguments.SetSearchField;
 import com.mycollab.db.arguments.StringSearchField;
 import com.mycollab.module.project.domain.ProjectGenericItem;
@@ -43,7 +42,7 @@ import com.mycollab.vaadin.ui.UserAvatarControlFactory;
 import com.mycollab.vaadin.web.ui.DefaultBeanPagedList;
 import com.mycollab.vaadin.web.ui.SearchTextField;
 import com.mycollab.vaadin.web.ui.WebThemes;
-import com.vaadin.server.FontAwesome;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
 import org.apache.commons.collections.CollectionUtils;
@@ -75,12 +74,9 @@ public class UserDashboardViewImpl extends AbstractVerticalPageView implements U
         prjKeys = prjService.getProjectKeysUserInvolved(UserUIContext.getUsername(), AppUI.getAccountId());
 
         tabSheet = new TabSheet();
-        tabSheet.addTab(buildDashboardComp(), UserUIContext.getMessage(GenericI18Enum.VIEW_DASHBOARD), FontAwesome.DASHBOARD);
-        tabSheet.addTab(buildProjectListComp(), UserUIContext.getMessage(ProjectI18nEnum.LIST), FontAwesome.BUILDING_O);
-        tabSheet.addTab(buildFollowingTicketComp(), UserUIContext.getMessage(ProjectCommonI18nEnum.VIEW_FAVORITES), FontAwesome.EYE);
-        if (!SiteConfiguration.isCommunityEdition()) {
-            tabSheet.addTab(buildCalendarComp(), UserUIContext.getMessage(ProjectCommonI18nEnum.VIEW_CALENDAR), FontAwesome.CALENDAR);
-        }
+        tabSheet.addTab(buildDashboardComp(), UserUIContext.getMessage(GenericI18Enum.VIEW_DASHBOARD), VaadinIcons.DASHBOARD);
+        tabSheet.addTab(buildProjectListComp(), UserUIContext.getMessage(ProjectI18nEnum.LIST), VaadinIcons.BUILDING_O);
+        tabSheet.addTab(buildFollowingTicketComp(), UserUIContext.getMessage(ProjectCommonI18nEnum.VIEW_FAVORITES), VaadinIcons.EYE);
 
         tabSheet.addSelectedTabChangeListener(selectedTabChangeEvent -> {
             CssLayout comp = (CssLayout) tabSheet.getSelectedTab();
@@ -97,10 +93,6 @@ public class UserDashboardViewImpl extends AbstractVerticalPageView implements U
             } else if (tabIndex == 4) {
                 SettingPresenter settingPresenter = PresenterResolver.getPresenter(SettingPresenter.class);
                 settingPresenter.onGo(comp, null);
-            } else if (tabIndex == 3) {
-                ICalendarDashboardPresenter calendarPresenter = PresenterResolver.getPresenterAndInitView
-                        (ICalendarDashboardPresenter.class);
-                calendarPresenter.go(comp, null);
             } else if (tabIndex == 1) {
                 ProjectListPresenter projectListPresenter = PresenterResolver.getPresenterAndInitView(ProjectListPresenter.class);
                 projectListPresenter.onGo(comp, null);
@@ -151,14 +143,6 @@ public class UserDashboardViewImpl extends AbstractVerticalPageView implements U
         return new MCssLayout().withFullWidth();
     }
 
-    private Component buildCalendarComp() {
-        return new MCssLayout().withFullWidth();
-    }
-
-    private Component buildSettingComp() {
-        return new MCssLayout().withFullWidth();
-    }
-
     private ComponentContainer setupHeader() {
         MHorizontalLayout headerWrapper = new MHorizontalLayout().withFullWidth().withStyleName("projectfeed-hdr-wrapper");
 
@@ -200,7 +184,7 @@ public class UserDashboardViewImpl extends AbstractVerticalPageView implements U
         return headerWrapper;
     }
 
-    private static final String headerTitle = String.format("%s Search for '%%s' (Found: %%d)", FontAwesome.SEARCH.getHtml());
+    private static final String headerTitle = String.format("%s Search for '%%s' (Found: %%d)", VaadinIcons.SEARCH.getHtml());
 
     private void displaySearchResult(String value) {
         removeAllComponents();

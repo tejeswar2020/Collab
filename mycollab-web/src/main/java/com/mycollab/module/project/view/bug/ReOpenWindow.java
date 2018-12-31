@@ -41,8 +41,12 @@ import com.mycollab.vaadin.ui.AdvancedEditBeanForm;
 import com.mycollab.vaadin.ui.GenericBeanForm;
 import com.mycollab.vaadin.web.ui.WebThemes;
 import com.mycollab.vaadin.web.ui.grid.GridFormLayoutHelper;
+import com.vaadin.data.HasValue;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.ui.*;
+import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.RichTextArea;
+import com.vaadin.ui.VerticalLayout;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
@@ -51,7 +55,7 @@ import org.vaadin.viritin.layouts.MHorizontalLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
 import org.vaadin.viritin.layouts.MWindow;
 
-import java.util.GregorianCalendar;
+import java.time.LocalDateTime;
 
 import static com.mycollab.common.i18n.OptionI18nEnum.StatusI18nEnum;
 
@@ -116,7 +120,7 @@ public class ReOpenWindow extends MWindow {
                         if (StringUtils.isNotBlank(commentValue)) {
                             CommentWithBLOBs comment = new CommentWithBLOBs();
                             comment.setComment(Jsoup.clean(commentValue, Whitelist.relaxed()));
-                            comment.setCreatedtime(new GregorianCalendar().getTime());
+                            comment.setCreatedtime(LocalDateTime.now());
                             comment.setCreateduser(UserUIContext.getUsername());
                             comment.setSaccountid(AppUI.getAccountId());
                             comment.setType(ProjectTypeConstants.BUG);
@@ -143,7 +147,7 @@ public class ReOpenWindow extends MWindow {
             }
 
             @Override
-            protected Component onAttachField(Object propertyId, Field<?> field) {
+            protected HasValue<?> onAttachField(Object propertyId, HasValue<?> field) {
                 if (propertyId.equals("assignuser")) {
                     return informationLayout.addComponent(field, UserUIContext.getMessage(GenericI18Enum.FORM_ASSIGNEE), 0, 0);
                 } else if (SimpleBug.Field.affectedVersions.equalTo(propertyId)) {
@@ -159,12 +163,12 @@ public class ReOpenWindow extends MWindow {
         private class EditFormFieldFactory extends AbstractBeanFieldGroupEditFieldFactory<SimpleBug> {
             private static final long serialVersionUID = 1L;
 
-            public EditFormFieldFactory(GenericBeanForm<SimpleBug> form) {
+            EditFormFieldFactory(GenericBeanForm<SimpleBug> form) {
                 super(form);
             }
 
             @Override
-            protected Field<?> onCreateField(final Object propertyId) {
+            protected HasValue<?> onCreateField(final Object propertyId) {
                 if (propertyId.equals("assignuser")) {
                     return new ProjectMemberSelectionField();
                 } else if (SimpleBug.Field.affectedVersions.equalTo(propertyId)) {

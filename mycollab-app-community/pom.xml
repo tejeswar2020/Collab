@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.mycollab</groupId>
         <artifactId>mycollab-parent-community</artifactId>
-        <version>6.0.0</version>
+        <version>7.0.0</version>
         <relativePath>../mycollab-parent-community/pom.xml</relativePath>
     </parent>
     <packaging>jar</packaging>
@@ -26,11 +26,13 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!--
         <dependency>
             <groupId>com.mycollab</groupId>
             <artifactId>mycollab-mobile</artifactId>
             <version>${project.version}</version>
         </dependency>
+        -->
 
         <dependency>
             <groupId>com.mycollab</groupId>
@@ -85,13 +87,13 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
+-->
         <dependency>
             <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-client-compiler</artifactId>
+            <artifactId>vaadin-compatibility-client</artifactId>
             <scope>provided</scope>
         </dependency>
--->
+
     </dependencies>
     <build>
         <plugins>
@@ -171,15 +173,17 @@
             <plugin>
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-maven-plugin</artifactId>
+                <version>${vaadin.version}</version>
                 <executions>
                     <execution>
                         <goals>
-				<!-- <goal>update-theme</goal> -->
-				<!-- <goal>update-widgetset</goal> -->
-				<!-- <goal>compile</goal> -->
-                                <!-- Comment out compile-theme goal to use on-the-fly theme compilation -->
-			        <!-- <goal>compile-theme</goal> -->
+                            <goal>update-theme</goal>
+                            <goal>update-widgetset</goal>
+                            <goal>compile</goal>
+                            <!-- Comment out compile-theme goal to use on-the-fly theme compilation -->
+                            <goal>compile-theme</goal>
                         </goals>
+                        <phase>compile</phase>
                     </execution>
                 </executions>
             </plugin>
@@ -333,7 +337,7 @@
                     </execution>
                 </executions>
             </plugin>
-	    <!-- <plugin>
+            <plugin>
                 <groupId>com.spotify</groupId>
                 <artifactId>dockerfile-maven-plugin</artifactId>
                 <version>${dockerfile-maven-plugin.version}</version>
@@ -342,9 +346,9 @@
                         <id>default</id>
                         <goals>
                             <goal>build</goal>
-                            
+                            <!--
                             <goal>push</goal>
-                            
+                            -->
                         </goals>
                     </execution>
                 </executions>
@@ -353,7 +357,7 @@
                     <tag>latest</tag>
                     <contextDirectory>${project.build.directory}</contextDirectory>
                 </configuration>
-	    </plugin> -->
+            </plugin>
         </plugins>
     </build>
 </project>

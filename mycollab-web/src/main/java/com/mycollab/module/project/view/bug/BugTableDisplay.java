@@ -1,16 +1,16 @@
 /**
  * Copyright © MyCollab
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -20,8 +20,8 @@ import com.mycollab.common.TableViewField;
 import com.mycollab.core.utils.StringUtils;
 import com.mycollab.module.project.ProjectLinkGenerator;
 import com.mycollab.module.project.ProjectTooltipGenerator;
+import com.mycollab.module.project.i18n.OptionI18nEnum;
 import com.mycollab.module.project.i18n.OptionI18nEnum.BugResolution;
-import com.mycollab.module.project.i18n.OptionI18nEnum.BugSeverity;
 import com.mycollab.module.project.ui.ProjectAssetsManager;
 import com.mycollab.module.project.view.settings.component.ProjectUserLink;
 import com.mycollab.module.tracker.domain.SimpleBug;
@@ -34,10 +34,10 @@ import com.mycollab.vaadin.ui.ELabel;
 import com.mycollab.vaadin.web.ui.LabelLink;
 import com.mycollab.vaadin.web.ui.WebThemes;
 import com.mycollab.vaadin.web.ui.table.DefaultPagedBeanTable;
-import com.vaadin.server.FontAwesome;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.Label;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author MyCollab Ltd.
@@ -46,15 +46,15 @@ import java.util.List;
 class BugTableDisplay extends DefaultPagedBeanTable<BugService, BugSearchCriteria, SimpleBug> {
     private static final long serialVersionUID = 1L;
 
-    BugTableDisplay(List<TableViewField> displayColumns) {
+    BugTableDisplay(Set<TableViewField> displayColumns) {
         this(null, displayColumns);
     }
 
-    BugTableDisplay(TableViewField requiredColumn, List<TableViewField> displayColumns) {
+    BugTableDisplay(TableViewField requiredColumn, Set<TableViewField> displayColumns) {
         this(null, requiredColumn, displayColumns);
     }
 
-    BugTableDisplay(String viewId, TableViewField requiredColumn, List<TableViewField> displayColumns) {
+    BugTableDisplay(String viewId, TableViewField requiredColumn, Set<TableViewField> displayColumns) {
         super(AppContextUtil.getSpringBean(BugService.class), SimpleBug.class, viewId, requiredColumn, displayColumns);
 
         this.addGeneratedColumn("assignuserFullName", (source, itemId, columnId) -> {
@@ -90,8 +90,8 @@ class BugTableDisplay extends DefaultPagedBeanTable<BugService, BugSearchCriteri
 
         this.addGeneratedColumn("severity", (source, itemId, columnId) -> {
             SimpleBug bug = getBeanByIndex(itemId);
-            Label lbPriority = new Label(UserUIContext.getMessage(BugSeverity.class, bug.getSeverity()));
-            lbPriority.setIcon(FontAwesome.STAR);
+            Label lbPriority = new Label(UserUIContext.getMessage(OptionI18nEnum.BugSeverity.class, bug.getSeverity()));
+            lbPriority.setIcon(VaadinIcons.STAR);
             if (bug.getSeverity() != null) {
                 lbPriority.addStyleName("bug-severity-" + bug.getSeverity().toLowerCase());
             }

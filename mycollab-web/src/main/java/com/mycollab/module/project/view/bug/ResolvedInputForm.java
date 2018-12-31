@@ -42,6 +42,7 @@ import com.mycollab.vaadin.UserUIContext;
 import com.mycollab.vaadin.ui.*;
 import com.mycollab.vaadin.web.ui.WebThemes;
 import com.mycollab.vaadin.web.ui.grid.GridFormLayoutHelper;
+import com.vaadin.data.HasValue;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
@@ -49,6 +50,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.vaadin.viritin.button.MButton;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
 
+import java.time.LocalDateTime;
 import java.util.GregorianCalendar;
 
 import static com.mycollab.common.i18n.OptionI18nEnum.StatusI18nEnum;
@@ -128,7 +130,7 @@ public class ResolvedInputForm extends AdvancedEditBeanForm<SimpleBug> {
                     if (StringUtils.isNotBlank(commentValue)) {
                         CommentWithBLOBs comment = new CommentWithBLOBs();
                         comment.setComment(commentValue);
-                        comment.setCreatedtime(new GregorianCalendar().getTime());
+                        comment.setCreatedtime(LocalDateTime.now());
                         comment.setCreateduser(UserUIContext.getUsername());
                         comment.setSaccountid(AppUI.getAccountId());
                         comment.setType(ProjectTypeConstants.BUG);
@@ -155,7 +157,7 @@ public class ResolvedInputForm extends AdvancedEditBeanForm<SimpleBug> {
         }
 
         @Override
-        protected Component onAttachField(Object propertyId, Field<?> field) {
+        protected HasValue<?> onAttachField(Object propertyId, HasValue<?> field) {
             if (propertyId.equals("resolution")) {
                 return informationLayout.addComponent(field, UserUIContext.getMessage(BugI18nEnum.FORM_RESOLUTION),
                         UserUIContext.getMessage(BugI18nEnum.FORM_RESOLUTION_HELP), 0, 0);
@@ -174,12 +176,12 @@ public class ResolvedInputForm extends AdvancedEditBeanForm<SimpleBug> {
     private class EditFormFieldFactory extends AbstractBeanFieldGroupEditFieldFactory<SimpleBug> {
         private static final long serialVersionUID = 1L;
 
-        public EditFormFieldFactory(GenericBeanForm<SimpleBug> form) {
+        EditFormFieldFactory(GenericBeanForm<SimpleBug> form) {
             super(form);
         }
 
         @Override
-        protected Field<?> onCreateField(final Object propertyId) {
+        protected HasValue<?> onCreateField(final Object propertyId) {
             if (propertyId.equals("resolution")) {
                 if (StringUtils.isBlank(bean.getResolution()) || UserUIContext.getMessage(BugResolution.None).equals(bug.getResolution())) {
                     bean.setResolution(BugResolution.Fixed.name());
@@ -196,14 +198,13 @@ public class ResolvedInputForm extends AdvancedEditBeanForm<SimpleBug> {
                 return fixedVersionSelect;
             } else if (propertyId.equals("comment")) {
                 commentArea = new RichTextArea();
-                commentArea.setNullRepresentation("");
                 return commentArea;
             }
 
             return null;
         }
 
-        private class ResolutionField extends CompoundCustomField<BugWithBLOBs> {
+        private class ResolutionField extends CustomField<BugWithBLOBs> {
             private MHorizontalLayout layout;
             private BugResolutionComboBox resolutionComboBox;
 
@@ -214,7 +215,7 @@ public class ResolvedInputForm extends AdvancedEditBeanForm<SimpleBug> {
             @Override
             protected Component initContent() {
                 layout = new MHorizontalLayout(resolutionComboBox);
-                fieldGroup.bind(resolutionComboBox, BugWithBLOBs.Field.resolution.name());
+//                fieldGroup.bind(resolutionComboBox, BugWithBLOBs.Field.resolution.name());
                 resolutionComboBox.addValueChangeListener(valueChangeEvent -> {
                     String value = (String) resolutionComboBox.getValue();
                     if (BugResolution.Duplicate.name().equals(value)) {
@@ -231,8 +232,13 @@ public class ResolvedInputForm extends AdvancedEditBeanForm<SimpleBug> {
             }
 
             @Override
-            public Class<? extends BugWithBLOBs> getType() {
-                return BugWithBLOBs.class;
+            protected void doSetValue(BugWithBLOBs bugWithBLOBs) {
+
+            }
+
+            @Override
+            public BugWithBLOBs getValue() {
+                return null;
             }
         }
     }

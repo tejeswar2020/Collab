@@ -1,16 +1,16 @@
 /**
  * Copyright © MyCollab
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -33,7 +33,7 @@ import com.mycollab.vaadin.mvp.PresenterResolver;
 import com.mycollab.vaadin.mvp.ScreenData;
 import com.mycollab.vaadin.mvp.ViewComponent;
 import com.mycollab.vaadin.web.ui.TabSheetDecorator;
-import com.vaadin.server.FontAwesome;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
@@ -63,10 +63,10 @@ public class UserSettingViewImpl extends AbstractVerticalPageView implements Use
 
     private void buildComponents() {
         userPresenter = PresenterResolver.getPresenter(ProjectUserPresenter.class);
-        myProjectTab.addTab(userPresenter.getView(), UserUIContext.getMessage(ProjectMemberI18nEnum.LIST), FontAwesome.USERS);
+        myProjectTab.addTab(userPresenter.getView(), UserUIContext.getMessage(ProjectMemberI18nEnum.LIST), VaadinIcons.USERS);
 
         rolePresenter = PresenterResolver.getPresenter(ProjectRolePresenter.class);
-        myProjectTab.addTab(rolePresenter.getView(), UserUIContext.getMessage(ProjectRoleI18nEnum.LIST), FontAwesome.USER_MD);
+        myProjectTab.addTab(rolePresenter.getView(), UserUIContext.getMessage(ProjectRoleI18nEnum.LIST), VaadinIcons.WORKPLACE);
 
         componentPresenter = PresenterResolver.getPresenter(ComponentPresenter.class);
         myProjectTab.addTab(componentPresenter.getView(), UserUIContext.getMessage(ComponentI18nEnum.LIST),
@@ -78,16 +78,16 @@ public class UserSettingViewImpl extends AbstractVerticalPageView implements Use
 
         settingPresenter = PresenterResolver.getPresenter(ProjectSettingPresenter.class);
         myProjectTab.addTab(settingPresenter.getView(), UserUIContext.getMessage(ProjectCommonI18nEnum
-                .VIEW_SETTINGS), FontAwesome.COG);
+                .VIEW_SETTINGS), VaadinIcons.COG);
 
         myProjectTab.addTab(settingPresenter.getView(), UserUIContext.getMessage(ProjectCommonI18nEnum
-                .VIEW_SETTINGS), FontAwesome.COG);
+                .VIEW_SETTINGS), VaadinIcons.COG);
 
         myProjectTab.addTab(settingPresenter.getView(), UserUIContext.getMessage(ProjectCommonI18nEnum
-                .VIEW_SETTINGS), FontAwesome.COG);
+                .VIEW_SETTINGS), VaadinIcons.COG);
 
         myProjectTab.addTab(settingPresenter.getView(), UserUIContext.getMessage(ProjectCommonI18nEnum
-                .VIEW_SETTINGS), FontAwesome.COG);
+                .VIEW_SETTINGS), VaadinIcons.COG);
 
         myProjectTab.addSelectedTabChangeListener(new SelectedTabChangeListener() {
             private static final long serialVersionUID = 1L;

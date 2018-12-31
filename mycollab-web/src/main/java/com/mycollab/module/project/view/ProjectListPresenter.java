@@ -20,6 +20,7 @@ import com.mycollab.db.arguments.SetSearchField;
 import com.mycollab.db.persistence.service.ISearchableService;
 import com.mycollab.module.project.domain.SimpleProject;
 import com.mycollab.module.project.domain.criteria.ProjectSearchCriteria;
+import com.mycollab.module.project.i18n.ProjectCommonI18nEnum;
 import com.mycollab.module.project.i18n.ProjectI18nEnum;
 import com.mycollab.module.project.service.ProjectService;
 import com.mycollab.spring.AppContextUtil;
@@ -52,10 +53,6 @@ public class ProjectListPresenter extends ListSelectionPresenter<ProjectListView
         super.viewAttached();
 
         view.getPopupActionHandlers().setMassActionHandler(new DefaultMassEditActionHandler(this) {
-            @Override
-            protected void onSelectExtra(String id) {
-
-            }
 
             @Override
             protected String getReportTitle() {
@@ -71,11 +68,12 @@ public class ProjectListPresenter extends ListSelectionPresenter<ProjectListView
 
     @Override
     protected void onGo(HasComponents container, ScreenData<?> data) {
-        ComponentContainer componentContainer = (ComponentContainer) container;
-        componentContainer.removeAllComponents();
-        componentContainer.addComponent(view);
+        ProjectModule projectModule = (ProjectModule) container;
+        projectModule.gotoSubView("Projects");
         ProjectSearchCriteria searchCriteria = new ProjectSearchCriteria();
         doSearch(searchCriteria);
+
+        AppUI.addFragment("project/list", UserUIContext.getMessage(ProjectI18nEnum.LIST));
     }
 
     @Override

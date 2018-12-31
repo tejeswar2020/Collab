@@ -20,16 +20,18 @@ import com.mycollab.common.i18n.ShellI18nEnum;
 import com.mycollab.core.MyCollabException;
 import com.mycollab.vaadin.UserUIContext;
 import com.mycollab.vaadin.ui.UIConstants;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ErrorMessage;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.Resource;
+import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.TabSheet.Tab;
-import org.vaadin.jouni.restrain.Restrain;
 import org.vaadin.viritin.button.MButton;
+import org.vaadin.viritin.layouts.MVerticalLayout;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -51,7 +53,7 @@ public class VerticalTabsheet extends CustomComponent {
     private CssLayout navigatorWrapper;
 
     private VerticalLayout tabContainer;
-    private VerticalLayout contentWrapper;
+    private CssLayout contentWrapper;
 
     private Map<String, Tab> compMap = new HashMap<>();
 
@@ -62,20 +64,19 @@ public class VerticalTabsheet extends CustomComponent {
 
     public VerticalTabsheet() {
         CssLayout contentLayout = new CssLayout();
-        new Restrain(contentLayout).setMinHeight("100%");
+        contentLayout.setHeight("100%");
 
         navigatorWrapper = new CssLayout();
         navigatorWrapper.setStyleName("navigator-wrap");
-        navigatorContainer = new VerticalLayout();
+
+        navigatorContainer = new MVerticalLayout().withMargin(new MarginInfo(true, false, true, false));
         navigatorWrapper.addComponent(navigatorContainer);
 
-        contentWrapper = new VerticalLayout();
+        contentWrapper = new CssLayout();
         contentWrapper.setStyleName("container-wrap");
-        new Restrain(contentWrapper).setMinHeight("100%");
 
-        tabContainer = new VerticalLayout();
+        tabContainer = new MVerticalLayout().withSpacing(false).withMargin(false);
         contentWrapper.addComponent(tabContainer);
-        new Restrain(tabContainer).setMinHeight("100%");
 
         contentLayout.addComponent(navigatorWrapper);
         contentLayout.addComponent(contentWrapper);
@@ -122,7 +123,7 @@ public class VerticalTabsheet extends CustomComponent {
                         selectedButton.addStyleName(TAB_SELECTED_STYLENAME);
                         selectedComp = compMap.get(button.getTabId());
                     }
-                    fireTabChangeEvent(new SelectedTabChangeEvent(VerticalTabsheet.this));
+                    fireTabChangeEvent(new SelectedTabChangeEvent(VerticalTabsheet.this, true));
                 } else {
                     Page.getCurrent().open(button.link, "_blank", false);
                 }
@@ -186,7 +187,7 @@ public class VerticalTabsheet extends CustomComponent {
             this.hideTabsCaption();
 
             navigatorContainer.setComponentAlignment(toggleBtn, Alignment.MIDDLE_CENTER);
-            toggleBtn.setIcon(FontAwesome.ANGLE_DOUBLE_RIGHT);
+            toggleBtn.setIcon(VaadinIcons.ANGLE_DOUBLE_RIGHT);
             toggleBtn.setStyleName(WebThemes.BUTTON_ICON_ONLY + " expand-button");
             toggleBtn.setDescription(UserUIContext.getMessage(ShellI18nEnum.ACTION_EXPAND_MENU));
             toggleBtn.setCaption("");
@@ -197,7 +198,7 @@ public class VerticalTabsheet extends CustomComponent {
 
             toggleBtn.setStyleName(WebThemes.BUTTON_ICON_ONLY + " closed-button");
             navigatorContainer.setComponentAlignment(toggleBtn, Alignment.TOP_RIGHT);
-            toggleBtn.setIcon(FontAwesome.TIMES);
+            toggleBtn.setIcon(VaadinIcons.CLOSE_SMALL);
             toggleBtn.setDescription(UserUIContext.getMessage(ShellI18nEnum.ACTION_COLLAPSE_MENU));
         }
     }
@@ -296,7 +297,7 @@ public class VerticalTabsheet extends CustomComponent {
         }
     }
 
-    public VerticalLayout getContentWrapper() {
+    public CssLayout getContentWrapper() {
         return this.contentWrapper;
     }
 
@@ -480,5 +481,9 @@ public class VerticalTabsheet extends CustomComponent {
             throw new MyCollabException("Do not support");
         }
 
+        @Override
+        public void setDescription(String s, ContentMode contentMode) {
+
+        }
     }
 }

@@ -56,6 +56,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static net.sf.dynamicreports.report.builder.DynamicReports.cmp;
@@ -147,7 +149,7 @@ public class FormReportTemplateExecutor<B> extends ReportTemplateExecutor {
                             Object tmpVal = PropertyUtils.getProperty(bean, dynaField.getFieldName());
                             if (tmpVal != null) {
                                 if (tmpVal instanceof Date) {
-                                    value = DateTimeUtils.formatDateToW3C((Date) tmpVal);
+                                    value = DateTimeUtils.formatDateToW3C((LocalDate) tmpVal);
                                 } else {
                                     value = String.valueOf(tmpVal);
                                 }
@@ -173,7 +175,7 @@ public class FormReportTemplateExecutor<B> extends ReportTemplateExecutor {
                             Object tmpVal = PropertyUtils.getProperty(bean, dynaField.getFieldName());
                             if (tmpVal != null) {
                                 if (tmpVal instanceof Date) {
-                                    value = DateTimeUtils.formatDateToW3C((Date) tmpVal);
+                                    value = DateTimeUtils.formatDateToW3C((LocalDate) tmpVal);
                                 } else {
                                     value = String.valueOf(tmpVal);
                                 }
@@ -285,7 +287,7 @@ public class FormReportTemplateExecutor<B> extends ReportTemplateExecutor {
         if (CollectionUtils.isNotEmpty(changeItems)) {
             TextFieldBuilder<String> authorField = cmp.text(StringUtils.trimHtmlTags(UserUIContext.getMessage(
                     GenericI18Enum.EXT_MODIFIED_ITEM, auditLog.getPostedUserFullName(), UserUIContext.formatPrettyTime
-                            (auditLog.getPosteddate())), Integer.MAX_VALUE)).setStyle(getReportStyles().getMetaInfoStyle());
+                            (auditLog.getCreatedtime())), Integer.MAX_VALUE)).setStyle(getReportStyles().getMetaInfoStyle());
             HorizontalListBuilder infoHeader = cmp.horizontalFlowList().add(authorField);
             VerticalListBuilder block = cmp.verticalList().add(infoHeader).setStyle(getReportStyles().getBorderStyle());
             for (AuditChangeItem item : changeItems) {

@@ -1,16 +1,16 @@
 /**
  * Copyright © MyCollab
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -20,10 +20,8 @@ import com.hp.gagawa.java.elements.A;
 import com.hp.gagawa.java.elements.Br;
 import com.hp.gagawa.java.elements.Div;
 import com.mycollab.common.i18n.GenericI18Enum;
-import com.mycollab.common.i18n.OptionI18nEnum.StatusI18nEnum;
+import com.mycollab.common.i18n.OptionI18nEnum;
 import com.mycollab.core.utils.StringUtils;
-import com.mycollab.module.crm.CrmTypeConstants;
-import com.mycollab.module.crm.ui.CrmAssetsManager;
 import com.mycollab.module.project.ProjectLinkBuilder;
 import com.mycollab.module.project.ProjectLinkGenerator;
 import com.mycollab.module.project.ProjectTypeConstants;
@@ -46,17 +44,18 @@ import com.mycollab.vaadin.ui.DefaultMassItemActionHandlerContainer;
 import com.mycollab.vaadin.ui.ELabel;
 import com.mycollab.vaadin.ui.UIConstants;
 import com.mycollab.vaadin.web.ui.CheckBoxDecor;
-import com.mycollab.vaadin.web.ui.LabelLink;
 import com.mycollab.vaadin.web.ui.SelectionOptionButton;
 import com.mycollab.vaadin.web.ui.WebThemes;
 import com.mycollab.vaadin.web.ui.table.DefaultPagedBeanTable;
-import com.mycollab.vaadin.web.ui.table.IPagedBeanTable;
-import com.vaadin.server.FontAwesome;
+import com.mycollab.vaadin.web.ui.table.IPagedTable;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.*;
 import org.vaadin.viritin.button.MButton;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
+import org.vaadin.viritin.layouts.MVerticalLayout;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * @author MyCollab Ltd
@@ -81,7 +80,7 @@ public class ProjectListViewImpl extends AbstractVerticalPageView implements Pro
         projectSearchPanel = new ProjectSearchPanel();
         with(projectSearchPanel);
 
-        bodyLayout = new VerticalLayout();
+        bodyLayout = new MVerticalLayout().withSpacing(false).withMargin(false);
         this.addComponent(bodyLayout);
 
         generateDisplayTable();
@@ -89,15 +88,14 @@ public class ProjectListViewImpl extends AbstractVerticalPageView implements Pro
 
     private void generateDisplayTable() {
         tableItem = new DefaultPagedBeanTable<>(AppContextUtil.getSpringBean(ProjectService.class),
-                SimpleProject.class, ProjectTypeConstants.PROJECT,
-                ProjectTableFieldDef.selected, Arrays.asList(ProjectTableFieldDef.projectName,
-                ProjectTableFieldDef.lead, ProjectTableFieldDef.client, ProjectTableFieldDef.startDate,
-                ProjectTableFieldDef.status));
+                SimpleProject.class, ProjectTypeConstants.PROJECT, ProjectTableFieldDef.selected,
+                new HashSet<>(Arrays.asList(ProjectTableFieldDef.projectName,
+                        ProjectTableFieldDef.lead, ProjectTableFieldDef.client, ProjectTableFieldDef.startDate,
+                        ProjectTableFieldDef.status)));
 
         tableItem.addGeneratedColumn("selected", (source, itemId, columnId) -> {
             final SimpleProject item = tableItem.getBeanByIndex(itemId);
             final CheckBoxDecor cb = new CheckBoxDecor("", item.isSelected());
-            cb.setImmediate(true);
             cb.addValueChangeListener(valueChangeEvent -> tableItem.fireSelectItemEvent(item));
             item.setExtraData(cb);
             return cb;
@@ -129,17 +127,17 @@ public class ProjectListViewImpl extends AbstractVerticalPageView implements Pro
                     project.getLeadFullName(), project.getLeadAvatarId(), true));
         });
 
-        tableItem.addGeneratedColumn(Project.Field.accountid.name(), (source, itemId, columnId) -> {
-            SimpleProject project = tableItem.getBeanByIndex(itemId);
-            if (project.getAccountid() != null) {
-                LabelLink b = new LabelLink(project.getClientName(),
-                        ProjectLinkGenerator.generateClientPreviewLink(project.getAccountid()));
-                b.setIconLink(CrmAssetsManager.getAsset(CrmTypeConstants.ACCOUNT));
-                return b;
-            } else {
-                return new Label();
-            }
-        });
+//        tableItem.addGeneratedColumn(Project.Field.accountid.name(), (source, itemId, columnId) -> {
+//            SimpleProject project = tableItem.getBeanByIndex(itemId);
+//            if (project.getAccountid() != null) {
+//                LabelLink b = new LabelLink(project.getClientName(),
+//                        ProjectLinkGenerator.generateClientPreviewLink(project.getAccountid()));
+//                b.setIconLink(CrmAssetsManager.getAsset(CrmTypeConstants.ACCOUNT));
+//                return b;
+//            } else {
+//                return new Label();
+//            }
+//        });
 
         tableItem.addGeneratedColumn(Project.Field.planstartdate.name(), (source, itemId, columnId) -> {
             SimpleProject project = tableItem.getBeanByIndex(itemId);
@@ -153,7 +151,7 @@ public class ProjectListViewImpl extends AbstractVerticalPageView implements Pro
 
         tableItem.addGeneratedColumn(Project.Field.projectstatus.name(), (source, itemId, columnId) -> {
             SimpleProject project = tableItem.getBeanByIndex(itemId);
-            return ELabel.i18n(project.getProjectstatus(), StatusI18nEnum.class);
+            return ELabel.i18n(project.getProjectstatus(), OptionI18nEnum.StatusI18nEnum.class);
         });
 
         tableItem.addGeneratedColumn(Project.Field.createdtime.name(), (source, itemId, columnId) -> {
@@ -189,7 +187,7 @@ public class ProjectListViewImpl extends AbstractVerticalPageView implements Pro
         layout.with(selectedItemsNumberLabel).withAlign(selectedItemsNumberLabel, Alignment.MIDDLE_CENTER).expand(selectedItemsNumberLabel);
 
         MButton customizeViewBtn = new MButton("", clickEvent -> UI.getCurrent().addWindow(new ProjectListCustomizeWindow(tableItem)))
-                .withStyleName(WebThemes.BUTTON_ACTION).withIcon(FontAwesome.ADJUST);
+                .withStyleName(WebThemes.BUTTON_ACTION).withIcon(VaadinIcons.ADJUST);
         customizeViewBtn.setDescription(UserUIContext.getMessage(GenericI18Enum.OPT_LAYOUT_OPTIONS));
         layout.with(customizeViewBtn).withAlign(customizeViewBtn, Alignment.MIDDLE_RIGHT);
 
@@ -235,7 +233,7 @@ public class ProjectListViewImpl extends AbstractVerticalPageView implements Pro
     }
 
     @Override
-    public IPagedBeanTable<ProjectSearchCriteria, SimpleProject> getPagedBeanTable() {
+    public IPagedTable<ProjectSearchCriteria, SimpleProject> getPagedBeanGrid() {
         return tableItem;
     }
 }

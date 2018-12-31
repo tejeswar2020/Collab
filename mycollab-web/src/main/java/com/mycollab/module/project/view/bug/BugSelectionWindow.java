@@ -1,16 +1,16 @@
 /**
  * Copyright © MyCollab
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -28,26 +28,25 @@ import com.mycollab.module.tracker.service.BugService;
 import com.mycollab.vaadin.AppUI;
 import com.mycollab.vaadin.UserUIContext;
 import com.mycollab.vaadin.ui.FieldSelection;
-import com.mycollab.vaadin.ui.UIUtils;
 import com.mycollab.vaadin.web.ui.WebThemes;
 import com.mycollab.vaadin.web.ui.table.DefaultPagedBeanTable;
-import org.vaadin.jouni.restrain.Restrain;
 import org.vaadin.viritin.button.MButton;
 import org.vaadin.viritin.layouts.MVerticalLayout;
 import org.vaadin.viritin.layouts.MWindow;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * @author MyCollab Ltd.
  * @since 1.0
  */
-public class BugSelectionWindow extends MWindow {
+class BugSelectionWindow extends MWindow {
     private static final long serialVersionUID = 1L;
 
     private FieldSelection<SimpleBug> fieldSelection;
 
-    public BugSelectionWindow(FieldSelection<SimpleBug> fieldSelection) {
+    BugSelectionWindow(FieldSelection<SimpleBug> fieldSelection) {
         super(UserUIContext.getMessage(GenericI18Enum.ACTION_SELECT_VALUE, UserUIContext.getMessage(BugI18nEnum.SINGLE)));
 
         this.withWidth("900px").withModal(true).withResizable(false).withCenter();
@@ -63,13 +62,13 @@ public class BugSelectionWindow extends MWindow {
             criteria.setProjectId(new NumberSearchField(CurrentProjectVariables.getProjectId()));
             tableItem.setSearchCriteria(criteria);
         });
-        new Restrain(tableItem).setMaxHeight((UIUtils.getBrowserHeight() - 120) + "px");
+//        new Restrain(gridItem).setMaxHeight((UIUtils.getBrowserHeight() - 120) + "px");
         this.setContent(new MVerticalLayout(bugSearchPanel, tableItem));
     }
 
     private DefaultPagedBeanTable<BugService, BugSearchCriteria, SimpleBug> createBugTable() {
         final DefaultPagedBeanTable<BugService, BugSearchCriteria, SimpleBug> tableItem = new BugTableDisplay(
-                Arrays.asList(BugTableFieldDef.summary, BugTableFieldDef.severity, BugTableFieldDef.resolution));
+                new HashSet<>(Arrays.asList(BugTableFieldDef.summary, BugTableFieldDef.severity, BugTableFieldDef.resolution)));
         tableItem.setWidth("100%");
         tableItem.setDisplayNumItems(10);
         tableItem.addGeneratedColumn("name", (source, itemId, columnId) -> {

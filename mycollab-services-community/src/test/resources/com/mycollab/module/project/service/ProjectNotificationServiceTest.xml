@@ -5,10 +5,10 @@
                paymentMethod="Credit Card" status="Active"/>
 
     <s_user username="admin" firstname="Nguyen" lastname="Hai"
-            middlename="Phuc" email="hainguyen@esofthead.com"/>
+            middlename="Phuc" email="hainguyen@esofthead.com" status="EmailVerified"/>
 
     <s_user username="user2" firstname="A" lastname="B"
-            email="user2@esofthead.com"/>
+            email="user2@esofthead.com" status="EmailVerified"/>
 
     <s_user_account id="1" isAccountOwner="1"
                     registerStatus="Active" username="admin" accountId="1"
@@ -22,7 +22,7 @@
                    projectStatus="Open" sAccountId="1"/>
 
     <m_prj_project id="2" name="B" priority="1" shortname="ccc"
-                   projectStatus="Open" homePage="http://esofthead.com" lead="admin"
+                   projectStatus="Open" homePage="http://esofthead.com" memLead="admin"
                    sAccountId="1"/>
 
     <m_prj_task id="1" projectId="1" taskindex="1" taskkey="1" priority="Medium"
@@ -34,11 +34,11 @@
     <m_tracker_bug status="Open" sAccountId="1" id="1" priority="Medium"
                    projectId="2" name="AAA" bugkey="20"/>
 
-    <m_monitor_item id="1" monitor_date="2013-04-10 13:29:23" type="Project-Task" typeId="1" sAccountId="1"
+    <m_monitor_item id="1" createdTime="2013-04-10 13:29:23" type="Project-Task" typeId="1" sAccountId="1"
                     user="admin"/>
-    <m_monitor_item id="2" monitor_date="2013-04-10 13:29:23" type="Project-Task" typeId="1" sAccountId="1"
+    <m_monitor_item id="2" createdTime="2013-04-10 13:29:23" type="Project-Task" typeId="1" sAccountId="1"
                     user="user2"/>
-    <m_monitor_item id="3" monitor_date="2013-04-10 13:29:23" type="Project-Task" typeId="1" sAccountId="1"
+    <m_monitor_item id="3" createdTime="2013-04-10 13:29:23" type="Project-Task" typeId="1" sAccountId="1"
                     user="user2"/>
 
     <s_relay_email_notification id="1" sAccountId="1" type="Project-Task" typeId="1" action="Create" changeBy="admin"/>

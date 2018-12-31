@@ -37,6 +37,7 @@ import org.springframework.aop.framework.Advised
 import org.springframework.beans.factory.annotation.Configurable
 import org.springframework.stereotype.Component
 import java.io.Serializable
+import java.time.LocalDateTime
 import java.util.*
 
 /**
@@ -68,7 +69,7 @@ class AuditLogAspect(private var cacheService: CacheService,
                 // get old value
                 val service = advised.targetSource.target
                 val oldValue: Any
-                var findMethod = try {
+                val findMethod = try {
                     cls.getMethod("findById", Int::class.javaPrimitiveType, Int::class.javaPrimitiveType)
                 } catch (e: Exception) {
                     cls.getMethod("findByPrimaryKey", Serializable::class.java, Int::class.javaPrimitiveType)
@@ -104,7 +105,7 @@ class AuditLogAspect(private var cacheService: CacheService,
                 }
 
                 val monitorItem = MonitorItem()
-                monitorItem.monitorDate = GregorianCalendar().time
+                monitorItem.createdtime = LocalDateTime.now()
                 monitorItem.type = monitorType
                 monitorItem.typeid = typeId
                 monitorItem.extratypeid = extraTypeId
@@ -187,12 +188,12 @@ class AuditLogAspect(private var cacheService: CacheService,
             try {
                 val typeId = PropertyUtils.getProperty(bean, "id") as Int
                 val auditLog = AuditLog()
-                auditLog.posteduser = username
+                auditLog.createduser = username
                 auditLog.module = ClassInfoMap.getModule(targetCls)
                 auditLog.type = ClassInfoMap.getType(targetCls)
                 auditLog.typeid = typeId
                 auditLog.saccountid = sAccountId
-                auditLog.posteddate = GregorianCalendar().time
+                auditLog.createdtime = LocalDateTime.now()
                 auditLog.changeset = changeSet
                 auditLog.objectClass = bean.javaClass.name
                 if (activityStreamId != null) {

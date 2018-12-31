@@ -30,8 +30,8 @@ import com.mycollab.spring.AppContextUtil;
 import com.mycollab.vaadin.AppUI;
 import com.mycollab.vaadin.UserUIContext;
 import com.mycollab.vaadin.web.ui.SavedFilterComboBox;
-import org.joda.time.LocalDate;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -42,6 +42,7 @@ import static com.mycollab.common.i18n.OptionI18nEnum.StatusI18nEnum;
  * @author MyCollab Ltd
  * @since 5.2.1
  */
+// TODO
 public class TaskSavedFilterComboBox extends SavedFilterComboBox {
     public static final String ALL_TASKS = "ALL_TICKETS";
     public static final String OPEN_TASKS = "OPEN_TICKETS";
@@ -93,7 +94,7 @@ public class TaskSavedFilterComboBox extends SavedFilterComboBox {
                 new SearchFieldInfo(SearchField.AND, TaskSearchCriteria.p_duedate, DateParam.BEFORE, new LazyValueInjector() {
                     @Override
                     protected Object doEval() {
-                        return new LocalDate().toDate();
+                        return LocalDate.now();
                     }
                 }), new SearchFieldInfo(SearchField.AND, new StringParam("id-status", "m_prj_task", "status"), QueryI18nEnum.StringI18nEnum.IS_NOT.name(),
                 ConstantValueInjector.valueOf(StatusI18nEnum.Closed.name())));
@@ -131,5 +132,15 @@ public class TaskSavedFilterComboBox extends SavedFilterComboBox {
         componentsText.setReadOnly(false);
         componentsText.setValue(selectedQueryName + " (" + countNumber + ")");
         componentsText.setReadOnly(true);
+    }
+
+    @Override
+    protected void doSetValue(String s) {
+
+    }
+
+    @Override
+    public String getValue() {
+        return null;
     }
 }

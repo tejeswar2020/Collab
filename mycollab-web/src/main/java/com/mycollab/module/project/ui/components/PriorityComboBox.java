@@ -1,16 +1,16 @@
 /**
  * Copyright © MyCollab
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -18,11 +18,9 @@ package com.mycollab.module.project.ui.components;
 
 import com.mycollab.module.project.i18n.OptionI18nEnum.Priority;
 import com.mycollab.vaadin.web.ui.I18nValueComboBox;
-import com.vaadin.data.Property;
-import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.ComboBox;
-
-import java.util.Arrays;
+import com.vaadin.icons.VaadinIcons;
+import com.vaadin.ui.IconGenerator;
+import com.vaadin.ui.StyleGenerator;
 
 /**
  * @author MyCollab Ltd.
@@ -32,31 +30,16 @@ public class PriorityComboBox extends I18nValueComboBox {
     private static final long serialVersionUID = 1L;
 
     public PriorityComboBox() {
-        this.setNullSelectionAllowed(false);
+        super(Priority.class, Priority.Urgent, Priority.High, Priority.Medium, Priority.Low, Priority.None);
         this.setWidth("150px");
-
-        this.loadData(Arrays.asList(Priority.Urgent, Priority.High, Priority.Medium, Priority.Low, Priority.None));
-
-        this.setItemIcon(Priority.Urgent.name(), FontAwesome.ARROW_UP);
-        this.setItemIcon(Priority.High.name(), FontAwesome.ARROW_UP);
-        this.setItemIcon(Priority.Medium.name(), FontAwesome.ARROW_UP);
-        this.setItemIcon(Priority.Low.name(), FontAwesome.ARROW_DOWN);
-        this.setItemIcon(Priority.None.name(), FontAwesome.ARROW_DOWN);
-
-        this.setItemStyleGenerator((source, itemId) -> {
-            if (itemId != null) {
-                return String.format("task-%s", itemId.toString().toLowerCase());
+        this.setItemIconGenerator((IconGenerator<String>) item -> {
+            if (item.equals(Priority.Urgent.name()) || item.equals(Priority.High.name())
+                    || item.equals(Priority.Medium.name())) {
+                return VaadinIcons.ARROW_UP;
+            } else {
+                return VaadinIcons.ARROW_DOWN;
             }
-            return null;
         });
-    }
-
-    @Override
-    public void setPropertyDataSource(Property newDataSource) {
-        Object value = newDataSource.getValue();
-        if (value == null) {
-            newDataSource.setValue(Priority.Medium.name());
-        }
-        super.setPropertyDataSource(newDataSource);
+        this.setStyleGenerator((StyleGenerator<String>) itemId -> String.format("task-%s", itemId.toLowerCase()));
     }
 }

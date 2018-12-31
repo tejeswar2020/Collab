@@ -1,16 +1,16 @@
 /**
  * Copyright © MyCollab
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -44,16 +44,15 @@ import com.mycollab.vaadin.mvp.ViewComponent;
 import com.mycollab.vaadin.resources.LazyStreamSource;
 import com.mycollab.vaadin.resources.OnDemandFileDownloader;
 import com.mycollab.vaadin.ui.ELabel;
-import com.mycollab.vaadin.ui.HeaderWithFontAwesome;
+import com.mycollab.vaadin.ui.HeaderWithIcon;
 import com.mycollab.vaadin.ui.UIConstants;
 import com.mycollab.vaadin.web.ui.AbstractPreviewItemComp;
 import com.mycollab.vaadin.web.ui.AdvancedPreviewBeanForm;
 import com.mycollab.vaadin.web.ui.ReadViewLayout;
 import com.mycollab.vaadin.web.ui.WebThemes;
-import com.vaadin.server.FontAwesome;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.StreamResource;
 import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.*;
 import org.vaadin.viritin.button.MButton;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
@@ -66,6 +65,7 @@ import java.util.List;
  * @author MyCollab Ltd.
  * @since 4.4.0
  */
+// TODO
 @ViewComponent
 public class PageReadViewImpl extends AbstractPreviewItemComp<Page> implements PageReadView {
     private static final long serialVersionUID = 1L;
@@ -85,7 +85,7 @@ public class PageReadViewImpl extends AbstractPreviewItemComp<Page> implements P
     private void constructHeader() {
         pageVersionsSelection = new PageVersionSelectionBox();
 
-        HeaderWithFontAwesome headerLbl = ComponentUtils.headerH2(ProjectTypeConstants.PAGE, UserUIContext.getMessage(PageI18nEnum.DETAIL));
+        HeaderWithIcon headerLbl = ComponentUtils.headerH2(ProjectTypeConstants.PAGE, UserUIContext.getMessage(PageI18nEnum.DETAIL));
         headerLbl.setWidthUndefined();
 
         header.addComponent(headerLbl, 0);
@@ -134,7 +134,7 @@ public class PageReadViewImpl extends AbstractPreviewItemComp<Page> implements P
                         | ProjectPreviewFormControlsGenerator.DELETE_BTN_PRESENTED,
                 ProjectRolePermissionCollections.PAGES);
 
-        MButton exportPdfBtn = new MButton("").withIcon(FontAwesome.FILE_PDF_O).withStyleName(WebThemes
+        MButton exportPdfBtn = new MButton("").withIcon(VaadinIcons.FILE_O).withStyleName(WebThemes
                 .BUTTON_OPTION).withDescription(UserUIContext.getMessage(GenericI18Enum.BUTTON_EXPORT_PDF));
 
         OnDemandFileDownloader fileDownloader = new OnDemandFileDownloader(new LazyStreamSource() {
@@ -170,9 +170,9 @@ public class PageReadViewImpl extends AbstractPreviewItemComp<Page> implements P
             ELabel titleLbl = ELabel.h3(beanItem.getSubject());
             header.with(titleLbl);
             Div footer = new Div().setStyle("width:100%").setCSSClass(UIConstants.META_INFO);
-            Span lastUpdatedTimeTxt = new Span().appendText(UserUIContext.getMessage(DayI18nEnum.LAST_UPDATED_ON,
-                    UserUIContext.formatPrettyTime(beanItem.getLastUpdatedTime().getTime())))
-                    .setTitle(UserUIContext.formatDateTime(beanItem.getLastUpdatedTime().getTime()));
+//            Span lastUpdatedTimeTxt = new Span().appendText(UserUIContext.getMessage(DayI18nEnum.LAST_UPDATED_ON,
+//                    UserUIContext.formatPrettyTime(beanItem.getLastUpdatedTime().getTime())))
+//                    .setTitle(UserUIContext.formatDateTime(beanItem.getLastUpdatedTime().getTime()));
 
             ProjectMemberService projectMemberService = AppContextUtil.getSpringBean(ProjectMemberService.class);
             SimpleProjectMember member = projectMemberService.findMemberByUsername(beanItem.getCreatedUser(),
@@ -186,11 +186,11 @@ public class PageReadViewImpl extends AbstractPreviewItemComp<Page> implements P
                         appendText(StringUtils.trim(member.getMemberFullName(), 30, true));
                 userLink.setAttribute("onmouseover", TooltipHelper.userHoverJsFunction(member.getUsername()));
                 userLink.setAttribute("onmouseleave", TooltipHelper.itemMouseLeaveJsFunction());
-                footer.appendChild(lastUpdatedTimeTxt, new Text("&nbsp;-&nbsp;" + UserUIContext.getMessage
-                                (GenericI18Enum.OPT_CREATED_BY) + ": "), userAvatar,
-                        DivLessFormatter.EMPTY_SPACE, userLink, DivLessFormatter.EMPTY_SPACE);
+//                footer.appendChild(lastUpdatedTimeTxt, new Text("&nbsp;-&nbsp;" + UserUIContext.getMessage
+//                                (GenericI18Enum.OPT_CREATED_BY) + ": "), userAvatar,
+//                        DivLessFormatter.EMPTY_SPACE, userLink, DivLessFormatter.EMPTY_SPACE);
             } else {
-                footer.appendChild(lastUpdatedTimeTxt);
+//                footer.appendChild(lastUpdatedTimeTxt);
             }
 
             header.addComponent(ELabel.html(footer.write()));
@@ -213,7 +213,7 @@ public class PageReadViewImpl extends AbstractPreviewItemComp<Page> implements P
             if (pageVersions.size() > 0) {
                 final ComboBox pageSelection = new ComboBox();
                 content.addComponent(pageSelection);
-                pageSelection.setNullSelectionAllowed(false);
+//                pageSelection.setEmptySelectionAllowed(false);
                 pageSelection.setTextInputAllowed(false);
 
                 pageSelection.addValueChangeListener(valueChangeEvent -> {
@@ -226,13 +226,13 @@ public class PageReadViewImpl extends AbstractPreviewItemComp<Page> implements P
                     }
                 });
 
-                pageSelection.setItemCaptionMode(ItemCaptionMode.EXPLICIT);
-                pageSelection.setNullSelectionAllowed(false);
+//                pageSelection.setItemCaptionMode(ItemCaptionMode.EXPLICIT);
+//                pageSelection.setEmptySelectionAllowed(false);
 
                 for (int i = 0; i < pageVersions.size(); i++) {
                     PageVersion version = pageVersions.get(i);
-                    pageSelection.addItem(version);
-                    pageSelection.setItemCaption(version, getVersionDisplay(version, i));
+//                    pageSelection.addItem(version);
+//                    pageSelection.setItemCaption(version, getVersionDisplay(version, i));
                 }
 
                 if (pageVersions.size() > 0) {
@@ -244,8 +244,9 @@ public class PageReadViewImpl extends AbstractPreviewItemComp<Page> implements P
         String getVersionDisplay(PageVersion version, int index) {
             String vFormat = "%s (%s)";
             Calendar createdTime = version.getCreatedTime();
-            String date = UserUIContext.formatDateTime(createdTime.getTime());
-            return String.format(vFormat, "V" + (index + 1), date);
+//            String date = UserUIContext.formatDateTime(createdTime.getTime());
+//            return String.format(vFormat, "V" + (index + 1), date);
+            return "Unimplemented";
         }
     }
 }

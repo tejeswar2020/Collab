@@ -1,16 +1,16 @@
 /**
  * Copyright © MyCollab
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -18,7 +18,6 @@ package com.mycollab.module.project.ui;
 
 import com.mycollab.common.i18n.GenericI18Enum;
 import com.mycollab.core.utils.StringUtils;
-import com.mycollab.module.crm.domain.SimpleAccount;
 import com.mycollab.module.file.PathUtils;
 import com.mycollab.module.file.StorageUtils;
 import com.mycollab.module.project.CurrentProjectVariables;
@@ -30,8 +29,8 @@ import com.mycollab.vaadin.UserUIContext;
 import com.mycollab.vaadin.ui.ELabel;
 import com.mycollab.vaadin.ui.UIConstants;
 import com.vaadin.event.LayoutEvents;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.ExternalResource;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Sizeable;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
@@ -42,13 +41,13 @@ import com.vaadin.ui.themes.ValoTheme;
  */
 public class ProjectAssetsUtil {
 
-    public static FontAwesome getPhaseIcon(String status) {
+    public static VaadinIcons getPhaseIcon(String status) {
         if (MilestoneStatus.Closed.name().equals(status)) {
-            return FontAwesome.MINUS_CIRCLE;
+            return VaadinIcons.MINUS_CIRCLE;
         } else if (MilestoneStatus.Future.name().equals(status)) {
-            return FontAwesome.CLOCK_O;
+            return VaadinIcons.CLOCK;
         } else {
-            return FontAwesome.SPINNER;
+            return VaadinIcons.SPINNER;
         }
     }
 
@@ -103,22 +102,22 @@ public class ProjectAssetsUtil {
         return wrapper;
     }
 
-    public static Component clientLogoComp(SimpleAccount account, int size) {
-        AbstractComponent wrapper;
-        if (!StringUtils.isBlank(account.getAvatarid())) {
-            wrapper = new Image(null, new ExternalResource(StorageUtils.getEntityLogoPath(AppUI.getAccountId(), account.getAvatarid(), 100)));
-        } else {
-            String accountName = account.getAccountname();
-            accountName = (accountName.length() > 3) ? accountName.substring(0, 3) : accountName;
-            ELabel projectIcon = new ELabel(accountName).withStyleName(UIConstants.TEXT_ELLIPSIS, "center");
-            wrapper = new VerticalLayout();
-            ((VerticalLayout) wrapper).addComponent(projectIcon);
-            ((VerticalLayout) wrapper).setComponentAlignment(projectIcon, Alignment.MIDDLE_CENTER);
-        }
-        wrapper.setWidth(size, Sizeable.Unit.PIXELS);
-        wrapper.setHeight(size, Sizeable.Unit.PIXELS);
-        wrapper.addStyleName(UIConstants.CIRCLE_BOX);
-        wrapper.setDescription(UserUIContext.getMessage(GenericI18Enum.OPT_CHANGE_IMAGE));
-        return wrapper;
-    }
+//    public static Component clientLogoComp(SimpleAccount account, int size) {
+//        AbstractComponent wrapper;
+//        if (!StringUtils.isBlank(account.getAvatarid())) {
+//            wrapper = new Image(null, new ExternalResource(StorageUtils.getEntityLogoPath(AppUI.getAccountId(), account.getAvatarid(), 100)));
+//        } else {
+//            String accountName = account.getAccountname();
+//            accountName = (accountName.length() > 3) ? accountName.substring(0, 3) : accountName;
+//            ELabel projectIcon = new ELabel(accountName).withStyleName(UIConstants.TEXT_ELLIPSIS, "center");
+//            wrapper = new VerticalLayout();
+//            ((VerticalLayout) wrapper).addComponent(projectIcon);
+//            ((VerticalLayout) wrapper).setComponentAlignment(projectIcon, Alignment.MIDDLE_CENTER);
+//        }
+//        wrapper.setWidth(size, Sizeable.Unit.PIXELS);
+//        wrapper.setHeight(size, Sizeable.Unit.PIXELS);
+//        wrapper.addStyleName(UIConstants.CIRCLE_BOX);
+//        wrapper.setDescription(UserUIContext.getMessage(GenericI18Enum.OPT_CHANGE_IMAGE));
+//        return wrapper;
+//    }
 }

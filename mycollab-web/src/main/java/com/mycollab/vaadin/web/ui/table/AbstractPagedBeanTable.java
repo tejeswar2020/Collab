@@ -1,16 +1,16 @@
 /**
  * Copyright © MyCollab
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -28,13 +28,14 @@ import com.mycollab.vaadin.AppUI;
 import com.mycollab.vaadin.UserUIContext;
 import com.mycollab.vaadin.event.PageableHandler;
 import com.mycollab.vaadin.event.SelectableItemHandler;
-import com.vaadin.data.Container;
-import com.vaadin.data.util.BeanItem;
-import com.vaadin.data.util.BeanItemContainer;
-import com.vaadin.server.FontAwesome;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.*;
-import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.v7.data.Container;
+import com.vaadin.v7.data.util.BeanItem;
+import com.vaadin.v7.data.util.BeanItemContainer;
+import com.vaadin.v7.ui.Table;
+import com.vaadin.v7.ui.Table.ColumnGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +52,7 @@ import static com.mycollab.vaadin.web.ui.WebThemes.SCROLLABLE_CONTAINER;
  * @author MyCollab Ltd.
  * @since 2.0
  */
-public abstract class AbstractPagedBeanTable<S extends SearchCriteria, B> extends VerticalLayout implements IPagedBeanTable<S, B> {
+public abstract class AbstractPagedBeanTable<S extends SearchCriteria, B> extends VerticalLayout implements IPagedTable<S, B> {
     private static final long serialVersionUID = 1L;
 
     private static final Logger LOG = LoggerFactory.getLogger(AbstractPagedBeanTable.class);
@@ -71,26 +72,27 @@ public abstract class AbstractPagedBeanTable<S extends SearchCriteria, B> extend
     protected Table tableItem;
     private HorizontalLayout controlBarWrapper;
 
-    private Set<SelectableItemHandler<B>> selectableHandlers;
-    private Set<PageableHandler> pageableHandlers;
+    private Set<SelectableItemHandler<B>> selectableHandlers = new HashSet<>();
+    private Set<PageableHandler> pageableHandlers = new HashSet<>();
 
     protected Class<B> type;
 
     private TableViewField requiredColumn;
-    private List<TableViewField> displayColumns;
-    private List<TableViewField> defaultSelectedColumns;
+    private Set<TableViewField> displayColumns;
+    private Set<TableViewField> defaultSelectedColumns;
 
     private final Map<Object, ColumnGenerator> columnGenerators = new HashMap<>();
 
-    public AbstractPagedBeanTable(Class<B> type, List<TableViewField> displayColumns) {
+    public AbstractPagedBeanTable(Class<B> type, Set<TableViewField> displayColumns) {
         this(type, null, displayColumns);
     }
 
-    public AbstractPagedBeanTable(Class<B> type, TableViewField requiredColumn, List<TableViewField> displayColumns) {
+    public AbstractPagedBeanTable(Class<B> type, TableViewField requiredColumn, Set<TableViewField> displayColumns) {
         this(type, null, requiredColumn, displayColumns);
     }
 
-    public AbstractPagedBeanTable(Class<B> type, String viewId, TableViewField requiredColumn, List<TableViewField> displayColumns) {
+    public AbstractPagedBeanTable(Class<B> type, String viewId, TableViewField requiredColumn, Set<TableViewField> displayColumns) {
+        this.setMargin(false);
         if (viewId != null) {
             CustomViewStoreService customViewStoreService = AppContextUtil.getSpringBean(CustomViewStoreService.class);
             CustomViewStore viewLayoutDef = customViewStoreService.getViewLayoutDef(AppUI.getAccountId(),
@@ -115,7 +117,7 @@ public abstract class AbstractPagedBeanTable<S extends SearchCriteria, B> extend
         addStyleName(SCROLLABLE_CONTAINER);
     }
 
-    public void setDisplayColumns(List<TableViewField> viewFields) {
+    public void setDisplayColumns(Set<TableViewField> viewFields) {
         this.displayColumns = viewFields;
         displayTableColumns();
         this.markAsDirty();
@@ -131,17 +133,22 @@ public abstract class AbstractPagedBeanTable<S extends SearchCriteria, B> extend
             tableItem.setColumnWidth(requiredColumn.getField(), requiredColumn.getDefaultWidth());
         }
 
-        for (int i = 0; i < displayColumns.size(); i++) {
-            TableViewField viewField = displayColumns.get(i);
+        displayColumns.forEach(viewField -> {
             visibleColumnsCol.add(viewField.getField());
             columnHeadersCol.add(UserUIContext.getMessage(viewField.getDescKey()));
+        });
 
-            if (i == 0) {
-                tableItem.setColumnExpandRatio(viewField.getField(), 1.0f);
-            } else {
-                tableItem.setColumnWidth(viewField.getField(), viewField.getDefaultWidth());
-            }
-        }
+//        for (int i = 0; i < displayColumns.size(); i++) {
+//            TableViewField viewField = displayColumns.get(i);
+//            visibleColumnsCol.add(viewField.getField());
+//            columnHeadersCol.add(UserUIContext.getMessage(viewField.getDescKey()));
+//
+//            if (i == 0) {
+//                tableItem.setColumnExpandRatio(viewField.getField(), 1.0f);
+//            } else {
+//                tableItem.setColumnWidth(viewField.getField(), viewField.getDefaultWidth());
+//            }
+//        }
 
         String[] visibleColumns = visibleColumnsCol.toArray(new String[visibleColumnsCol.size()]);
         String[] columnHeaders = columnHeadersCol.toArray(new String[columnHeadersCol.size()]);
@@ -152,9 +159,6 @@ public abstract class AbstractPagedBeanTable<S extends SearchCriteria, B> extend
 
     @Override
     public void addSelectableItemHandler(final SelectableItemHandler<B> handler) {
-        if (selectableHandlers == null) {
-            selectableHandlers = new HashSet<>();
-        }
         selectableHandlers.add(handler);
     }
 
@@ -171,11 +175,7 @@ public abstract class AbstractPagedBeanTable<S extends SearchCriteria, B> extend
 
     @Override
     public void addPageableHandler(final PageableHandler handler) {
-        if (pageableHandlers == null) {
-            pageableHandlers = new HashSet<>();
-        }
         pageableHandlers.add(handler);
-
     }
 
     @Override
@@ -231,17 +231,12 @@ public abstract class AbstractPagedBeanTable<S extends SearchCriteria, B> extend
             this.currentPage = currentPage;
             searchRequest.setCurrentPage(currentPage);
             doSearch();
-
-            if (pageableHandlers != null) {
-                pageableHandlers.forEach(handler -> handler.move(currentPage));
-            }
+            pageableHandlers.forEach(handler -> handler.move(currentPage));
         }
     }
 
     public void fireSelectItemEvent(final B item) {
-        if (this.selectableHandlers != null) {
-            selectableHandlers.forEach(handler -> handler.onSelect(item));
-        }
+        selectableHandlers.forEach(handler -> handler.onSelect(item));
     }
 
     private ComponentContainer createPagingControls() {
@@ -348,7 +343,7 @@ public abstract class AbstractPagedBeanTable<S extends SearchCriteria, B> extend
         }
 
         if (StringUtils.isNotBlank((String) sortColumnId)) {
-            tableItem.setColumnIcon(sortColumnId, isAscending ? FontAwesome.CARET_DOWN : FontAwesome.CARET_UP);
+            tableItem.setColumnIcon(sortColumnId, isAscending ? VaadinIcons.CARET_DOWN : VaadinIcons.CARET_UP);
         }
 
         tableItem.addHeaderClickListener(headerClickEvent -> {
@@ -400,12 +395,12 @@ public abstract class AbstractPagedBeanTable<S extends SearchCriteria, B> extend
         return tableItem;
     }
 
-    public List<TableViewField> getDefaultSelectedColumns() {
+    public Set<TableViewField> getDefaultSelectedColumns() {
         return defaultSelectedColumns;
     }
 
     @Override
-    public List<TableViewField> getDisplayColumns() {
+    public Set<TableViewField> getDisplayColumns() {
         return displayColumns;
     }
 

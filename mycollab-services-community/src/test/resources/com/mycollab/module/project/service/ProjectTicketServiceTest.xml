@@ -3,8 +3,8 @@
     <s_user username="hai79" firstname="Nguyen" lastname="Hai" email="hainguyen@esofthead.com"/>
     <s_user username="linhduong" firstname="Duong" lastname="Linh" email="linhduong@esofthead" avatarId="linh123"/>
 
-    <s_account id="1" status="Active" paymentMethod="Credit" subdomain="a"/>
-    <s_account id="2" status="Active" paymentMethod="Credit" subdomain="b"/>
+    <s_account id="1" status="Active" paymentMethod="Credit" subdomain="a" createdTime="2013-04-10 00:00:00"/>
+    <s_account id="2" status="Active" paymentMethod="Credit" subdomain="b" createdTime="2013-04-10 00:00:00"/>
 
     <s_user_account id="1" username="hai79" accountId="2" isAccountOwner="1" registeredTime="2013-04-10 00:00:00"
                     registerStatus="Active"/>
@@ -15,9 +15,9 @@
     <m_prj_project id="2" name="Project 2" shortname="2" projectStatus="Active" sAccountId="1"/>
     <m_prj_project id="3" name="Project 3" shortname="3" projectStatus="Active" sAccountId="2"/>
 
-    <m_prj_member id="1" username="hai79" projectId="3" joinDate="2013-04-10 00:00:00" isAdmin="1" status="Active"
+    <m_prj_member id="1" username="hai79" projectId="3" createdTime="2013-04-10 00:00:00" isAdmin="1" status="Active"
                   sAccountId="1"/>
-    <m_prj_member id="2" username="linhduong" projectId="3" joinDate="2013-04-10 00:00:00" isAdmin="0" status="Active"
+    <m_prj_member id="2" username="linhduong" projectId="3" createdTime="2013-04-10 00:00:00" isAdmin="0" status="Active"
                   sAccountId="1"/>
 
     <m_prj_task id="1" name="Task 1" percentagecomplete="10" projectId="1" sAccountId="1" dueDate="2013-04-10 00:00:00"

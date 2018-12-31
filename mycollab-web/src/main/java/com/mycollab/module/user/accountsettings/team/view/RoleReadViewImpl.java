@@ -1,16 +1,16 @@
 /**
  * Copyright © MyCollab
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -36,7 +36,8 @@ import com.mycollab.vaadin.ui.FormContainer;
 import com.mycollab.vaadin.ui.field.DefaultViewField;
 import com.mycollab.vaadin.web.ui.AdvancedPreviewBeanForm;
 import com.mycollab.vaadin.web.ui.grid.GridFormLayoutHelper;
-import com.vaadin.server.FontAwesome;
+import com.vaadin.data.HasValue;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
@@ -55,13 +56,12 @@ public class RoleReadViewImpl extends AbstractVerticalPageView implements RoleRe
     private SimpleRole role;
 
     public RoleReadViewImpl() {
-        super();
         this.setMargin(new MarginInfo(false, true, true, true));
 
         MHorizontalLayout header = new MHorizontalLayout().withMargin(new MarginInfo(true, false, true, false)).withFullWidth();
         header.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
 
-        ELabel headerText = ELabel.h2(FontAwesome.USERS.getHtml() + " " + UserUIContext.getMessage(RoleI18nEnum.DETAIL));
+        ELabel headerText = ELabel.h2(VaadinIcons.USERS.getHtml() + " " + UserUIContext.getMessage(RoleI18nEnum.DETAIL));
         header.with(headerText).expand(headerText);
         this.addComponent(header);
 
@@ -87,7 +87,7 @@ public class RoleReadViewImpl extends AbstractVerticalPageView implements RoleRe
             private static final long serialVersionUID = 1L;
 
             @Override
-            protected Field<?> onCreateField(Object propertyId) {
+            protected HasValue<?> onCreateField(Object propertyId) {
                 if (Role.Field.isdefault.equalTo(propertyId)) {
                     Enum localizeYesNo = LocalizationHelper.localizeYesNo(role.getIsdefault());
                     return new DefaultViewField(UserUIContext.getMessage(localizeYesNo));
@@ -105,7 +105,7 @@ public class RoleReadViewImpl extends AbstractVerticalPageView implements RoleRe
 
 
     private ComponentContainer constructPermissionSectionView(String depotTitle, PermissionMap permissionMap,
-                                                        List<PermissionDefItem> defItems) {
+                                                              List<PermissionDefItem> defItems) {
         GridFormLayoutHelper formHelper = GridFormLayoutHelper.defaultFormLayoutHelper(2, defItems.size() / 2 + 1);
         FormContainer permissionsPanel = new FormContainer();
 
@@ -139,12 +139,6 @@ public class RoleReadViewImpl extends AbstractVerticalPageView implements RoleRe
 
             permissionsPanel.addComponent(constructPermissionSectionView(UserUIContext.getMessage(RoleI18nEnum.SECTION_PROJECT_MANAGEMENT_TITLE),
                     permissionMap, RolePermissionCollections.PROJECT_PERMISSION_ARR));
-
-            permissionsPanel.addComponent(constructPermissionSectionView(UserUIContext.getMessage(RoleI18nEnum.SECTION_CRM_TITLE),
-                    permissionMap, RolePermissionCollections.CRM_PERMISSIONS_ARR));
-
-            permissionsPanel.addComponent(constructPermissionSectionView(UserUIContext.getMessage(RoleI18nEnum.SECTION_DOCUMENT_TITLE),
-                    permissionMap, RolePermissionCollections.DOCUMENT_PERMISSION_ARR));
 
             permissionsPanel.addComponent(constructPermissionSectionView(UserUIContext.getMessage(RoleI18nEnum.SECTION_ACCOUNT_MANAGEMENT_TITLE),
                     permissionMap, RolePermissionCollections.ACCOUNT_PERMISSION_ARR));

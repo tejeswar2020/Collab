@@ -32,10 +32,9 @@ import com.mycollab.vaadin.EventBusFactory
 import com.mycollab.vaadin.UserUIContext
 import com.mycollab.vaadin.ui.ELabel
 import com.mycollab.vaadin.ui.UIConstants
-import com.vaadin.server.FontAwesome
+import com.vaadin.icons.VaadinIcons
 import com.vaadin.ui.*
 import org.vaadin.hene.popupbutton.PopupButton
-import org.vaadin.jouni.restrain.Restrain
 import org.vaadin.viritin.button.MButton
 import org.vaadin.viritin.layouts.MCssLayout
 import org.vaadin.viritin.layouts.MHorizontalLayout
@@ -48,13 +47,12 @@ import org.vaadin.viritin.layouts.MVerticalLayout
 abstract class AbstractNotificationComponent : PopupButton(), PopupButton.PopupVisibilityListener, ApplicationEventListener<ShellEvent.NewNotification> {
 
     private val notificationItems = mutableSetOf<AbstractNotification>()
-    private val notificationContainer = MVerticalLayout().withSpacing(false).withMargin(false).
-            withStyleName(WebThemes.SCROLLABLE_CONTAINER)
+    private val notificationContainer = MVerticalLayout().withSpacing(false).withMargin(false).withStyleName(WebThemes.SCROLLABLE_CONTAINER)
 
     init {
-        Restrain(notificationContainer).setMaxWidth("500px").setMaxHeight("500px")
+//        Restrain(notificationContainer).setMaxWidth("500px").setMaxHeight("500px")
         this.content = notificationContainer
-        this.icon = FontAwesome.BELL
+        this.icon = VaadinIcons.BELL
         this.styleName = "notification-button"
 
         addPopupVisibilityListener(this)
@@ -102,7 +100,7 @@ abstract class AbstractNotificationComponent : PopupButton(), PopupButton.PopupV
     }
 
     private fun updateCaption() {
-        if (ui!= null && notificationItems.isNotEmpty()) {
+        if (ui != null && notificationItems.isNotEmpty()) {
             AsyncInvoker.access(ui, object : AsyncInvoker.PageCommand() {
                 override fun run() {
                     this@AbstractNotificationComponent.caption = "${notificationItems.size}"
@@ -147,7 +145,7 @@ abstract class AbstractNotificationComponent : PopupButton(), PopupButton.PopupV
             is NewUpdateAvailableNotification -> {
                 val spanEl = Span()
                 spanEl.appendText(UserUIContext.getMessage(ShellI18nEnum.OPT_HAVING_NEW_VERSION, item.version))
-                val lbl = ELabel.html("${FontAwesome.INFO_CIRCLE.html} ${spanEl.write()}").withFullWidth()
+                val lbl = ELabel.html("${VaadinIcons.INFO_CIRCLE.html} ${spanEl.write()}").withFullWidth()
                 val lblWrapper = CssLayout()
                 lblWrapper.addComponent(lbl)
                 return when {
@@ -162,7 +160,7 @@ abstract class AbstractNotificationComponent : PopupButton(), PopupButton.PopupV
                 }
             }
             is RequestUploadAvatarNotification -> {
-                val avatarUploadLbl = ELabel.html("${FontAwesome.EXCLAMATION_TRIANGLE.html} ${UserUIContext.getMessage(ShellI18nEnum.OPT_REQUEST_UPLOAD_AVATAR)}")
+                val avatarUploadLbl = ELabel.html("${VaadinIcons.EXCLAMATION_CIRCLE.html} ${UserUIContext.getMessage(ShellI18nEnum.OPT_REQUEST_UPLOAD_AVATAR)}")
                 val uploadAvatarBtn = MButton(UserUIContext.getMessage(ShellI18nEnum.ACTION_UPLOAD_AVATAR)) { _ ->
                     EventBusFactory.getInstance().post(ShellEvent.GotoUserAccountModule(this, arrayOf("preview")))
                     this@AbstractNotificationComponent.isPopupVisible = false
@@ -174,7 +172,7 @@ abstract class AbstractNotificationComponent : PopupButton(), PopupButton.PopupV
                     EventBusFactory.getInstance().post(ShellEvent.GotoUserAccountModule(this, arrayOf("setup")))
                     this@AbstractNotificationComponent.isPopupVisible = false
                 }.withStyleName(UIConstants.BLOCK)
-                val lbl = ELabel.html("${FontAwesome.EXCLAMATION_TRIANGLE.html} ${UserUIContext.getMessage(ShellI18nEnum.ERROR_NO_SMTP_SETTING)}")
+                val lbl = ELabel.html("${VaadinIcons.EXCLAMATION_CIRCLE.html} ${UserUIContext.getMessage(ShellI18nEnum.ERROR_NO_SMTP_SETTING)}")
                 val lblWrapper = MCssLayout(lbl)
                 return MHorizontalLayout(lblWrapper, smtpBtn).expand(lblWrapper).withDefaultComponentAlignment(Alignment.TOP_LEFT)
             }

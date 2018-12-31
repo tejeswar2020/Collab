@@ -1,16 +1,16 @@
 /**
  * Copyright © MyCollab
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -34,9 +34,9 @@ import com.mycollab.vaadin.ui.FormContainer;
 import com.mycollab.vaadin.ui.IFormLayoutFactory;
 import com.mycollab.vaadin.web.ui.KeyCaptionComboBox;
 import com.mycollab.vaadin.web.ui.grid.GridFormLayoutHelper;
-import com.vaadin.server.FontAwesome;
+import com.vaadin.data.HasValue;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 
@@ -49,6 +49,7 @@ import static com.mycollab.vaadin.web.ui.utils.FormControlsGenerator.generateEdi
  * @author MyCollab Ltd.
  * @since 1.0
  */
+// TODO
 @ViewComponent
 public class ProjectRoleAddViewImpl extends AbstractEditItemComp<ProjectRole> implements ProjectRoleAddView {
     private static final long serialVersionUID = 1L;
@@ -66,8 +67,8 @@ public class ProjectRoleAddViewImpl extends AbstractEditItemComp<ProjectRole> im
     }
 
     @Override
-    protected FontAwesome initFormIconResource() {
-        return FontAwesome.GROUP;
+    protected VaadinIcons initFormIconResource() {
+        return VaadinIcons.GROUP;
     }
 
     @Override
@@ -91,18 +92,16 @@ public class ProjectRoleAddViewImpl extends AbstractEditItemComp<ProjectRole> im
             private static final long serialVersionUID = 1L;
 
             @Override
-            protected Field<?> onCreateField(Object propertyId) {
+            protected HasValue<?> onCreateField(Object propertyId) {
                 if (propertyId.equals("description")) {
-                    final TextArea textArea = new TextArea();
-                    textArea.setNullRepresentation("");
-                    return textArea;
+                    return new TextArea();
                 } else if (propertyId.equals("rolename")) {
                     final TextField tf = new TextField();
-                    if (isValidateForm) {
-                        tf.setNullRepresentation("");
-                        tf.setRequired(true);
-                        tf.setRequiredError("Please enter a role name");
-                    }
+//                    if (isValidateForm) {
+//                        tf.setNullRepresentation("");
+//                        tf.setRequired(true);
+//                        tf.setRequiredError("Please enter a role name");
+//                    }
                     return tf;
                 }
                 return null;
@@ -137,8 +136,8 @@ public class ProjectRoleAddViewImpl extends AbstractEditItemComp<ProjectRole> im
                 captionHelp = SecurityI18nEnum.ACCESS_PERMISSION_HELP;
             }
 
-            final Integer flag = perMap.getPermissionFlag(permissionPath);
-            permissionBox.setValue(flag);
+            Integer flag = perMap.getPermissionFlag(permissionPath);
+            permissionBox.setValue(KeyCaptionComboBox.Entry.of(flag));
             permissionControlsMap.put(permissionPath, permissionBox);
             permissionFormHelper.addComponent(permissionBox, UserUIContext.getMessage(RolePermissionI18nEnum.valueOf(permissionPath)),
                     UserUIContext.getMessage(captionHelp), i % 2, i / 2);
@@ -153,7 +152,7 @@ public class ProjectRoleAddViewImpl extends AbstractEditItemComp<ProjectRole> im
         PermissionMap permissionMap = new PermissionMap();
         for (Map.Entry<String, KeyCaptionComboBox> entry : permissionControlsMap.entrySet()) {
             KeyCaptionComboBox permissionBox = entry.getValue();
-            Integer perValue = (Integer) permissionBox.getValue();
+            Integer perValue = permissionBox.getValue().getKey();
             permissionMap.addPath(entry.getKey(), perValue);
         }
         return permissionMap;
